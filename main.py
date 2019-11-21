@@ -39,6 +39,6 @@ while sheet[NAME + str(i)].value:
 pdf = FPDF(orientation="L", unit="mm", format="A4")
 pdf.add_font("KEK", '', 'times-new-roman.ttf', uni=True)
 pdf.add_page()
-pdf.set_font("Arial", size=14)
+pdf.set_font("KEK", size=14)
 pdf.cell(100,100,"лул")
 pdf.output("kek.pdf")
