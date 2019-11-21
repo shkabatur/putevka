@@ -5,6 +5,7 @@ from pprint import pprint
 from fpdf import FPDF
 import datetime
 import json
+import re
 
 with open("position.json") as json_file:
     position = json.load(json_file)
@@ -75,10 +76,15 @@ def printKind(kind):
     printInCells(kind["patronymic"], position["1s"]["Otchestvo"]["x"], position["1s"]["Otchestvo"]["y"])
 
     #FIO_RODITELYA
-    print_xy(position["1s"]["FIO_roditelya"]["x"],position["1s"]["FIO_roditelya"]["y"], kind["parent"])
+    print_xy(position["1s"]["FIO_roditelya"]["x"],position["1s"]["FIO_roditelya"]["y"], kind["parent"][0])
+    if len(kind["parent"]) > 1:
+        print_xy(position["1s"]["FIO_roditelya"]["x"],position["1s"]["FIO_roditelya"]["y"] + 7, kind["parent"][1])
+
 
     #Adres_roditelya
-    print_xy(position["1s"]["Adres_roditelya"]["x"],position["1s"]["Adres_roditelya"]["y"], kind["address"])
+    print_xy(position["1s"]["Adres_roditelya"]["x"],position["1s"]["Adres_roditelya"]["y"], kind["address"][0])
+    if len(kind["address"]) > 1:
+        print_xy(position["1s"]["Adres_roditelya"]["x"]-35,position["1s"]["Adres_roditelya"]["y"]+7, kind["address"][1])
     #===================Конец первой странички==================================
     #===========================================================================
 
@@ -88,9 +94,13 @@ while sheet[NAME + str(i)].value:
     kind = {}
     kind["first_name"], kind["last_name"], kind["patronymic"] = sheet[NAME + str(i)].value.split()
     kind["date"] = sheet[DATE + str(i)].value
-    #parent = sheet[RODITEL + str(i)].value
-    kind["parent"] = sheet[RODITEL + str(i)].value
-    kind["address"] = sheet[ADDRESS + str(i)].value
+    kind["parent"] = re.split("\n|,|  ", sheet[RODITEL + str(i)].value)
+    address = sheet[ADDRESS + str(i)].value
+    if len(address) > 40:
+        sp = address.split(',')
+        kind["address"] = [",".join(sp[:(len(sp)//2)]),",".join(sp[(len(sp)//2):])]
+    else:
+        kind["address"] = [address]
     kind["ages"] = getAges(kind["date"])
     kinds.append(kind)
     i += 1
