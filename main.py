@@ -4,41 +4,102 @@ from openpyxl import Workbook, load_workbook
 from pprint import pprint
 from fpdf import FPDF
 import datetime
+import json
 
-time_new_roman = 'times-new-roman.ttf'
+with open("position.json") as json_file:
+    position = json.load(json_file)
+
+
+pdf = FPDF(orientation="L", unit="mm", format="A4")
+pdf.add_font("KEK", '', 'times-new-roman.ttf', uni=True)
 
 DATE = "D"
 ADDRESS = "K"
 NAME = "C"
-MAMA = "M"
+RODITEL = "M"
 
-def getAges(a):
-    b = datetime.datetime.now()
-    return int((b - a).days / 365)    
+SMENA = "13"
+
+s_god = "9"
+po_god = "9"
+
+s_den = "11"
+po_den = "23"
+
+s_mesyac = "июнь"
+po_mesyac = "июль"
 
 workbook = load_workbook(filename="Astrakhan.xlsx")
 sheet = workbook.active
 kinds= []
 
+def getAges(a):
+    b = datetime.datetime.now()
+    return int((b - a).days / 365)    
+
+
+def print_xy(x,y,text):
+    pdf.set_xy(x,y)
+    pdf.cell(0,0,text)
+
+def printInCells(s, x, y):
+    INTERVAL = 6.2
+    for c in s :
+        print_xy(x,y,c)
+        x += INTERVAL
+
+
+def printKind(kind):
+    pdf.add_page()
+    pdf.set_font("KEK", size=14)
+    #==========================================================================
+    #========Первая страничка==================================================
+    #nomer smeny
+    print_xy(position["1s"]["nomer_smeny"]["x"], position["1s"]["nomer_smeny"]["y"], SMENA)
+
+    #S DATE
+    print_xy(position["1s"]["s_den"]["x"], position["1s"]["s_den"]["y"], s_den)
+    print_xy(position["1s"]["s_mesyac"]["x"], position["1s"]["s_mesyac"]["y"], s_mesyac)
+    print_xy(position["1s"]["s_god"]["x"], position["1s"]["s_god"]["y"], s_god)
+
+    #PO DATE
+    print_xy(position["1s"]["po_den"]["x"], position["1s"]["po_den"]["y"], po_den)
+    print_xy(position["1s"]["po_mesyac"]["x"], position["1s"]["po_mesyac"]["y"], po_mesyac)
+    print_xy(position["1s"]["po_god"]["x"], position["1s"]["po_god"]["y"], po_god)
+
+    #FAMILIYA
+    printInCells(kind["first_name"], position["1s"]["Familiya"]["x"], position["1s"]["Familiya"]["y"])
+    #IMYA
+    printInCells(kind["last_name"], position["1s"]["Imya"]["x"], position["1s"]["Imya"]["y"])
+    #OTCHESTVO
+    printInCells(kind["patronymic"], position["1s"]["Otchestvo"]["x"], position["1s"]["Otchestvo"]["y"])
+
+    #FIO_RODITELYA
+    print_xy(position["1s"]["FIO_roditelya"]["x"],position["1s"]["FIO_roditelya"]["y"], kind["parent"])
+
+    #Adres_roditelya
+    print_xy(position["1s"]["Adres_roditelya"]["x"],position["1s"]["Adres_roditelya"]["y"], kind["address"])
+    #===================Конец первой странички==================================
+    #===========================================================================
+
+
 i = 10
 while sheet[NAME + str(i)].value:
     kind = {}
-    kind["name"] = sheet[NAME + str(i)].value
+    kind["first_name"], kind["last_name"], kind["patronymic"] = sheet[NAME + str(i)].value.split()
     kind["date"] = sheet[DATE + str(i)].value
-    kind["mama"] = sheet[MAMA + str(i)].value
+    #parent = sheet[RODITEL + str(i)].value
+    kind["parent"] = sheet[RODITEL + str(i)].value
     kind["address"] = sheet[ADDRESS + str(i)].value
     kind["ages"] = getAges(kind["date"])
     kinds.append(kind)
     i += 1
 
-#pprint(kinds)
-#-----------------------------------------------
-#-------GENERATING PDF FILES
-#-----------------------------------------------
+def main():
+    for kind in kinds:
+        printKind(kind)
+    pdf.output("kek.pdf")
 
-pdf = FPDF(orientation="L", unit="mm", format="A4")
-pdf.add_font("KEK", '', 'times-new-roman.ttf', uni=True)
-pdf.add_page()
-pdf.set_font("KEK", size=14)
-pdf.cell(100,100,"лул")
-pdf.output("kek.pdf")
+
+if __name__ == "__main__":
+    main()
