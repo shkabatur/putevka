@@ -21,15 +21,19 @@ NAME = "C"
 RODITEL = "M"
 MINISTERSTVO = "Q"
 
-path_to_file, SMENA, date_smena, s, po = sys.argv[1:]
+file_from, file_to, SMENA, date_smena, s, po = sys.argv[1:]
+file_to = file_to + "putevki.pdf"
+
+print(file_to)
 
 s_den, s_mesyac, s_god = s.split('-')
 po_den, po_mesyac, po_god = po.split('-')
-date_smena = datetime.datetime(date_smena)
+y,m,d = date_smena.split('.')
+date_smena = datetime.datetime(int(y), int(m), int(d))
 
 
 
-workbook = load_workbook(filename="Astrakhan.xlsx")
+workbook = load_workbook(filename=file_from)
 sheet = workbook.active
 kinds= []
 
@@ -85,12 +89,12 @@ def printKind(kind):
     #Adres_roditelya
     print_xy(position["1s"]["Adres_roditelya"]["x"],position["1s"]["Adres_roditelya"]["y"], kind["address"][0])
     if len(kind["address"]) > 1:
-        print_xy(position["1s"]["Adres_roditelya"]["x"]-35,position["1s"]["Adres_roditelya"]["y"]+7, kind["address"][1])
+        print_xy(position["1s"]["Adres_roditelya2"]["x"],position["1s"]["Adres_roditelya2"]["y"], kind["address"][1])
 
     #Ministerstvo
     print_xy(position["1s"]["ministerstvo"]["x"],position["1s"]["ministerstvo"]["y"], kind["ministerstvo"][0])
     if len(kind["ministerstvo"]) > 1:
-        print_xy(position["1s"]["ministerstvo"]["x"],position["1s"]["ministerstvo"]["y"]+7, kind["ministerstvo"][1])
+        print_xy(position["1s"]["ministerstvo2"]["x"],position["1s"]["ministerstvo2"]["y"], kind["ministerstvo"][1])
     
     #LINE
     #x = position["1s"]["line"]["x"]
@@ -134,7 +138,7 @@ def printKind(kind):
     #Adres_roditelya
     print_xy(position["2s"]["Adres_roditelya"]["x"],position["2s"]["Adres_roditelya"]["y"], kind["address"][0])
     if len(kind["address"]) > 1:
-        print_xy(position["2s"]["Adres_roditelya"]["x"]-35,position["2s"]["Adres_roditelya"]["y"]+7, kind["address"][1])
+        print_xy(position["2s"]["Adres_roditelya2"]["x"],position["2s"]["Adres_roditelya2"]["y"], kind["address"][1])
 
 
     #LINE
@@ -166,14 +170,14 @@ while sheet[NAME + str(i)].value:
         kind["address"] = [",".join(sp[:(len(sp)//2)]),",".join(sp[(len(sp)//2):])]
     else:
         kind["address"] = [address]
-    kind["ages"] = kind["date"].strftime("%d.%m.%Y") + " (" + getAges(kind["date"],datetime.datetime.now()) + " лет)"
+    kind["ages"] = kind["date"].strftime("%d.%m.%Y") + " (" + getAges(kind["date"]) + " лет)"
     kinds.append(kind)
     i += 1
 
 def main():
     for kind in kinds:
         printKind(kind)
-    pdf.output("kek.pdf")
+    pdf.output(file_to)
 
 
 
