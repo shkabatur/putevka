@@ -6,6 +6,7 @@ from fpdf import FPDF
 import datetime
 import json
 import re
+import sys
 
 with open("position.json") as json_file:
     position = json.load(json_file)
@@ -20,24 +21,20 @@ NAME = "C"
 RODITEL = "M"
 MINISTERSTVO = "Q"
 
-SMENA = "13"
+path_to_file, SMENA, date_smena, s, po = sys.argv[1:]
 
-s_god = "9"
-po_god = "9"
+s_den, s_mesyac, s_god = s.split('-')
+po_den, po_mesyac, po_god = po.split('-')
+date_smena = datetime.datetime(date_smena)
 
-s_den = "11"
-po_den = "23"
 
-s_mesyac = "июнь"
-po_mesyac = "июль"
 
 workbook = load_workbook(filename="Astrakhan.xlsx")
 sheet = workbook.active
 kinds= []
 
-def getAges(a,b):
-    b = datetime.datetime.now()
-    return str(int((b - a).days / 365))    
+def getAges(a):
+    return str(int((date_smena - a).days / 365))    
 
 
 def print_xy(x,y,text):
@@ -91,13 +88,61 @@ def printKind(kind):
         print_xy(position["1s"]["Adres_roditelya"]["x"]-35,position["1s"]["Adres_roditelya"]["y"]+7, kind["address"][1])
 
     #Ministerstvo
-    print_xy(position["1s"]["ministerstvo"]["x"],position["1s"]["ministerstvo"]["y"], kind["ministerstvo"])
+    print_xy(position["1s"]["ministerstvo"]["x"],position["1s"]["ministerstvo"]["y"], kind["ministerstvo"][0])
+    if len(kind["ministerstvo"]) > 1:
+        print_xy(position["1s"]["ministerstvo"]["x"],position["1s"]["ministerstvo"]["y"]+7, kind["ministerstvo"][1])
+    
     #LINE
     #x = position["1s"]["line"]["x"]
     #y = position["1s"]["line"]["y"]
     #pdf.set_line_width(2)
     #pdf.line(x,y,x+35,y)
     #===================Конец первой странички==================================
+    #===========================================================================
+
+    #==========================================================================
+    #========Вторая страничка==================================================
+    #nomer smeny
+    print_xy(position["2s"]["nomer_smeny"]["x"], position["2s"]["nomer_smeny"]["y"], SMENA)
+
+    #S DATE
+    print_xy(position["2s"]["s_den"]["x"], position["2s"]["s_den"]["y"], s_den)
+    print_xy(position["2s"]["s_mesyac"]["x"], position["2s"]["s_mesyac"]["y"], s_mesyac)
+    print_xy(position["2s"]["s_god"]["x"], position["2s"]["s_god"]["y"], s_god)
+
+    #PO DATE
+    print_xy(position["2s"]["po_den"]["x"], position["2s"]["po_den"]["y"], po_den)
+    print_xy(position["2s"]["po_mesyac"]["x"], position["2s"]["po_mesyac"]["y"], po_mesyac)
+    print_xy(position["2s"]["po_god"]["x"], position["2s"]["po_god"]["y"], po_god)
+
+    #VOZRAST
+    print_xy(position["2s"]["vozrast"]["x"], position["2s"]["vozrast"]["y"], kind["ages"])
+
+    #FAMILIYA
+    printInCells(kind["first_name"], position["2s"]["Familiya"]["x"], position["2s"]["Familiya"]["y"])
+    #IMYA
+    printInCells(kind["last_name"], position["2s"]["Imya"]["x"], position["2s"]["Imya"]["y"])
+    #OTCHESTVO
+    printInCells(kind["patronymic"], position["2s"]["Otchestvo"]["x"], position["2s"]["Otchestvo"]["y"])
+
+    #FIO_RODITELYA
+    print_xy(position["2s"]["FIO_roditelya"]["x"],position["2s"]["FIO_roditelya"]["y"], kind["parent"][0])
+    if len(kind["parent"]) > 1:
+        print_xy(position["2s"]["FIO_roditelya"]["x"],position["2s"]["FIO_roditelya"]["y"] + 7, kind["parent"][1])
+
+
+    #Adres_roditelya
+    print_xy(position["2s"]["Adres_roditelya"]["x"],position["2s"]["Adres_roditelya"]["y"], kind["address"][0])
+    if len(kind["address"]) > 1:
+        print_xy(position["2s"]["Adres_roditelya"]["x"]-35,position["2s"]["Adres_roditelya"]["y"]+7, kind["address"][1])
+
+
+    #LINE
+    #x = position["2s"]["line"]["x"]
+    #y = position["2s"]["line"]["y"]
+    #pdf.set_line_width(2)
+    #pdf.line(x,y,x+35,y)
+    #===================Конец второйстранички==================================
     #===========================================================================
 
 
@@ -107,7 +152,14 @@ while sheet[NAME + str(i)].value:
     kind["first_name"], kind["last_name"], kind["patronymic"] = sheet[NAME + str(i)].value.split()
     kind["date"] = sheet[DATE + str(i)].value
     kind["parent"] = re.split("\n|,|  ", sheet[RODITEL + str(i)].value)
-    kind["ministerstvo"] = sheet[MINISTERSTVO + str(i)].value
+    
+    ministerstvo = sheet[MINISTERSTVO + str(i)].value
+    if len(ministerstvo) > 50:
+        sp = ministerstvo.split(' ')
+        kind["ministerstvo"] = [" ".join(sp[:(len(sp)//2)+2])," ".join(sp[(len(sp)//2)+2:])]
+    else:
+        kind["ministerstvo"] = [ministerstvo]
+
     address = sheet[ADDRESS + str(i)].value
     if len(address) > 40:
         sp = address.split(',')
@@ -122,6 +174,7 @@ def main():
     for kind in kinds:
         printKind(kind)
     pdf.output("kek.pdf")
+
 
 
 if __name__ == "__main__":
