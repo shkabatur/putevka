@@ -18,6 +18,7 @@ DATE = "D"
 ADDRESS = "K"
 NAME = "C"
 RODITEL = "M"
+MINISTERSTVO = "Q"
 
 SMENA = "13"
 
@@ -34,9 +35,9 @@ workbook = load_workbook(filename="Astrakhan.xlsx")
 sheet = workbook.active
 kinds= []
 
-def getAges(a):
+def getAges(a,b):
     b = datetime.datetime.now()
-    return int((b - a).days / 365)    
+    return str(int((b - a).days / 365))    
 
 
 def print_xy(x,y,text):
@@ -68,6 +69,9 @@ def printKind(kind):
     print_xy(position["1s"]["po_mesyac"]["x"], position["1s"]["po_mesyac"]["y"], po_mesyac)
     print_xy(position["1s"]["po_god"]["x"], position["1s"]["po_god"]["y"], po_god)
 
+    #VOZRAST
+    print_xy(position["1s"]["vozrast"]["x"], position["1s"]["vozrast"]["y"], kind["ages"])
+
     #FAMILIYA
     printInCells(kind["first_name"], position["1s"]["Familiya"]["x"], position["1s"]["Familiya"]["y"])
     #IMYA
@@ -85,6 +89,14 @@ def printKind(kind):
     print_xy(position["1s"]["Adres_roditelya"]["x"],position["1s"]["Adres_roditelya"]["y"], kind["address"][0])
     if len(kind["address"]) > 1:
         print_xy(position["1s"]["Adres_roditelya"]["x"]-35,position["1s"]["Adres_roditelya"]["y"]+7, kind["address"][1])
+
+    #Ministerstvo
+    print_xy(position["1s"]["ministerstvo"]["x"],position["1s"]["ministerstvo"]["y"], kind["ministerstvo"])
+    #LINE
+    #x = position["1s"]["line"]["x"]
+    #y = position["1s"]["line"]["y"]
+    #pdf.set_line_width(2)
+    #pdf.line(x,y,x+35,y)
     #===================Конец первой странички==================================
     #===========================================================================
 
@@ -95,13 +107,14 @@ while sheet[NAME + str(i)].value:
     kind["first_name"], kind["last_name"], kind["patronymic"] = sheet[NAME + str(i)].value.split()
     kind["date"] = sheet[DATE + str(i)].value
     kind["parent"] = re.split("\n|,|  ", sheet[RODITEL + str(i)].value)
+    kind["ministerstvo"] = sheet[MINISTERSTVO + str(i)].value
     address = sheet[ADDRESS + str(i)].value
     if len(address) > 40:
         sp = address.split(',')
         kind["address"] = [",".join(sp[:(len(sp)//2)]),",".join(sp[(len(sp)//2):])]
     else:
         kind["address"] = [address]
-    kind["ages"] = getAges(kind["date"])
+    kind["ages"] = kind["date"].strftime("%d.%m.%Y") + " (" + getAges(kind["date"],datetime.datetime.now()) + " лет)"
     kinds.append(kind)
     i += 1
 
