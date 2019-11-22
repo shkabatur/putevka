@@ -168,7 +168,12 @@ def printKind(kind):
 i = 10
 while sheet[NAME + str(i)].value:
     kind = {}
-    kind["first_name"], kind["last_name"], kind["patronymic"] = sheet[NAME + str(i)].value.split()
+    flp = sheet[NAME + str(i)].value.split()
+    if len(flp) == 2:
+         kind["first_name"], kind["last_name"] = flp
+         kind["patronymic"] = ""
+    else:
+        kind["first_name"], kind["last_name"], kind["patronymic"] = flp
     kind["date"] = sheet[DATE + str(i)].value
     kind["parent"] = re.split("\n|,|  ", sheet[RODITEL + str(i)].value)
     
