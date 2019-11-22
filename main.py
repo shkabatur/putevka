@@ -1,208 +1,81 @@
-# -*- coding: utf-8 -*-
-
-from openpyxl import Workbook, load_workbook
-from pprint import pprint
-from fpdf import FPDF
-import datetime
-import json
+from tkinter import messagebox, filedialog, Entry, Tk, StringVar, Label, END, Button
 import re
-import sys
+from datetime import datetime
+from helpers import processKinds
 
-with open("position.json") as json_file:
-    position = json.load(json_file)
+def selectFile():
+    filename = filedialog.askopenfilename(
+        initialdir = "/home/den/src/putevka/", title = "Выберитей файл путёвок!",
+        filetypes = (("exel files","*.xlsx"), ("all files","*.*")))
+    input_file_l['text'] = re.split(r'\\|/', filename)[-1]
 
-log = open("log.txt", "w")
-sys.stderr = open("errors.txt", "w")
-
-pdf = FPDF(orientation="L", unit="mm", format="A4")
-pdf.add_font("KEK", '', 'times-new-roman.ttf', uni=True)
-
-DATE = "D"
-ADDRESS = "K"
-NAME = "C"
-RODITEL = "M"
-MINISTERSTVO = "Q"
-print(sys.argv[1:], file=log)
-file_from, file_to, SMENA, date_smena, s, po = sys.argv[1:]
-file_to = file_to + datetime.datetime.now().strftime("%H.%M.%S") + ".pdf"
-
-
-ss = s.split('-')
-print("ss:",ss,file=log)
-if len(ss) == 4:
-    s_den1,s_den2, s_mesyac, s_god = ss
-    s_den = "-".join([s_den1, s_den2])
-else:
-    s_den, s_mesyac, s_god = ss
-
-ppo = po.split("-")
-print("ppo = ", ppo, file=log)
-if len(ppo) == 4:
-    po_den1,po_den2, po_mesyac, po_god = ppo
-    po_den = "-".join([po_den1, po_den2])
-else:
-    po_den, po_mesyac, po_god = ppo
-
-y,m,d = date_smena.split('.')
-date_smena = datetime.datetime(int(y), int(m), int(d))
-
-
-
-workbook = load_workbook(filename=file_from)
-sheet = workbook.active
-kinds= []
-
-def getAges(a):
-    return str(int((date_smena - a).days / 365))    
-
-
-def print_xy(x,y,text):
-    pdf.set_xy(x,y)
-    pdf.cell(0,0,text)
-
-def printInCells(s, x, y):
-    INTERVAL = 6.2
-    for c in s :
-        print_xy(x,y,c)
-        x += INTERVAL
-
-
-def printKind(kind):
-    pdf.add_page()
-    pdf.set_font("KEK", size=12)
-    #==========================================================================
-    #========Первая страничка==================================================
-    #nomer smeny
-    print_xy(position["1s"]["nomer_smeny"]["x"], position["1s"]["nomer_smeny"]["y"], SMENA)
-
-    #S DATE
-    print_xy(position["1s"]["s_den"]["x"], position["1s"]["s_den"]["y"], s_den)
-    print_xy(position["1s"]["s_mesyac"]["x"], position["1s"]["s_mesyac"]["y"], s_mesyac)
-    print_xy(position["1s"]["s_god"]["x"], position["1s"]["s_god"]["y"], s_god)
-
-    #PO DATE
-    print_xy(position["1s"]["po_den"]["x"], position["1s"]["po_den"]["y"], po_den)
-    print_xy(position["1s"]["po_mesyac"]["x"], position["1s"]["po_mesyac"]["y"], po_mesyac)
-    print_xy(position["1s"]["po_god"]["x"], position["1s"]["po_god"]["y"], po_god)
-
-    #VOZRAST
-    print_xy(position["1s"]["vozrast"]["x"], position["1s"]["vozrast"]["y"], kind["ages"])
-
-    #FAMILIYA
-    printInCells(kind["first_name"], position["1s"]["Familiya"]["x"], position["1s"]["Familiya"]["y"])
-    #IMYA
-    printInCells(kind["last_name"], position["1s"]["Imya"]["x"], position["1s"]["Imya"]["y"])
-    #OTCHESTVO
-    printInCells(kind["patronymic"], position["1s"]["Otchestvo"]["x"], position["1s"]["Otchestvo"]["y"])
-
-    #FIO_RODITELYA
-    print_xy(position["1s"]["FIO_roditelya"]["x"],position["1s"]["FIO_roditelya"]["y"], kind["parent"][0])
-    if len(kind["parent"]) > 1:
-        print_xy(position["1s"]["FIO_roditelya"]["x"],position["1s"]["FIO_roditelya"]["y"] + 7, kind["parent"][1])
-
-
-    #Adres_roditelya
-    print_xy(position["1s"]["Adres_roditelya"]["x"],position["1s"]["Adres_roditelya"]["y"], kind["address"][0])
-    if len(kind["address"]) > 1:
-        print_xy(position["1s"]["Adres_roditelya2"]["x"],position["1s"]["Adres_roditelya2"]["y"], kind["address"][1])
-
-    #Ministerstvo
-    print_xy(position["1s"]["ministerstvo"]["x"],position["1s"]["ministerstvo"]["y"], kind["ministerstvo"][0])
-    if len(kind["ministerstvo"]) > 1:
-        print_xy(position["1s"]["ministerstvo2"]["x"],position["1s"]["ministerstvo2"]["y"], kind["ministerstvo"][1])
+def generate():
+    #smena
+    smena_no = smena_no_e.get()
+    if len(smena_no) < 1:
+        messagebox.showwarning("Номер смены","Заполните номер смены!")
+        return
+    #date
+    smena_date = smena_date_e.get()
+    try:
+        d,m,y = smena_date.split('.')
+    except:
+        messagebox.showwarning("Заполните дату!","Неправильно заполнена дата!")
+        return
+    try:
+        smena_date = datetime(int(y), int(m), int(d))
+    except:
+        messagebox.showwarning("Заполните дату!","Неправильно заполнена дата!")
     
-    #LINE
-    #x = position["1s"]["line"]["x"]
-    #y = position["1s"]["line"]["y"]
-    #pdf.set_line_width(2)
-    #pdf.line(x,y,x+35,y)
-    #===================Конец первой странички==================================
-    #===========================================================================
+    input_file = input_file_l['text']
+    output_file = filedialog.askdirectory() + input_file_l['text'].split('.')[0] + ".pdf"
 
-    #==========================================================================
-    #========Вторая страничка==================================================
-    #nomer smeny
-    print_xy(position["2s"]["nomer_smeny"]["x"], position["2s"]["nomer_smeny"]["y"], SMENA)
+    print(output_file)
+    s_den = s_den_e.get()
+    s_mesyac = s_mesyac_e.get()
+    s_god = s_god_e.get()
+    po_den = po_den_e.get()
+    po_mesyac = po_mesyac_e.get()
+    po_god = po_god_e.get()
 
-    #S DATE
-    print_xy(position["2s"]["s_den"]["x"], position["2s"]["s_den"]["y"], s_den)
-    print_xy(position["2s"]["s_mesyac"]["x"], position["2s"]["s_mesyac"]["y"], s_mesyac)
-    print_xy(position["2s"]["s_god"]["x"], position["2s"]["s_god"]["y"], s_god)
+    processKinds(smena_no,smena_date,input_file,output_file,[s_den,s_mesyac,s_god], [po_den,po_mesyac,po_god])
 
-    #PO DATE
-    print_xy(position["2s"]["po_den"]["x"], position["2s"]["po_den"]["y"], po_den)
-    print_xy(position["2s"]["po_mesyac"]["x"], position["2s"]["po_mesyac"]["y"], po_mesyac)
-    print_xy(position["2s"]["po_god"]["x"], position["2s"]["po_god"]["y"], po_god)
+root = Tk()
+root.title("Путёвки")
+root.geometry("320x240")
+root.resizable(0,0)
+#номер смены
+Label(root, text="Номер смены:").place(x=10,y=10)
+smena_no_e = Entry(root, width=4)
+smena_no_e.place(x=110,y=10)
 
-    #VOZRAST
-    print_xy(position["2s"]["vozrast"]["x"], position["2s"]["vozrast"]["y"], kind["ages"])
+#дата начала смены
+Label(root, text="Дата начала смены:").place(x=10,y=35)
+smena_date_e = Entry(root, width=10)
+smena_date_e.place(x=155,y=35)
 
-    #FAMILIYA
-    printInCells(kind["first_name"], position["2s"]["Familiya"]["x"], position["2s"]["Familiya"]["y"])
-    #IMYA
-    printInCells(kind["last_name"], position["2s"]["Imya"]["x"], position["2s"]["Imya"]["y"])
-    #OTCHESTVO
-    printInCells(kind["patronymic"], position["2s"]["Otchestvo"]["x"], position["2s"]["Otchestvo"]["y"])
+#срок путёвки
+Label(root,text="Срок путёвки с").place(x=10,y=60)
+s_den_e = Entry(root, width=5)
+s_den_e.place(x=125,y=60)
+s_mesyac_e = Entry(root,width=10)
+s_mesyac_e.place(x=175,y=60)
+Label(root, text="201").place(x=261,y=60)
+s_god_e = Entry(root, width=1)
+s_god_e.place(x=285,y=60)
+Label(root,text="по").place(x=100,y=80)
+po_den_e = Entry(root, width=5)
+po_den_e.place(x=125,y=80)
+po_mesyac_e = Entry(root,width=10)
+po_mesyac_e.place(x=175,y=80)
+Label(root, text="201").place(x=261,y=80)
+po_god_e = Entry(root, width=1)
+po_god_e.place(x=285,y=80)
 
-    #FIO_RODITELYA
-    print_xy(position["2s"]["FIO_roditelya"]["x"],position["2s"]["FIO_roditelya"]["y"], kind["parent"][0])
-    if len(kind["parent"]) > 1:
-        print_xy(position["2s"]["FIO_roditelya"]["x"],position["2s"]["FIO_roditelya"]["y"] + 7, kind["parent"][1])
+Button(root,text="Выбрать файл", command=selectFile).place(x=10,y=120)
+input_file_l = Label(root,text="Файл не выбран!")
+input_file_l.place(x=150,y=120)
+Button(root,text="Создать!", command=generate).place(x=110,y=180)
 
-
-    #Adres_roditelya
-    print_xy(position["2s"]["Adres_roditelya"]["x"],position["2s"]["Adres_roditelya"]["y"], kind["address"][0])
-    if len(kind["address"]) > 1:
-        print_xy(position["2s"]["Adres_roditelya2"]["x"],position["2s"]["Adres_roditelya2"]["y"], kind["address"][1])
-
-
-    #LINE
-    #x = position["2s"]["line"]["x"]
-    #y = position["2s"]["line"]["y"]
-    #pdf.set_line_width(2)
-    #pdf.line(x,y,x+35,y)
-    #===================Конец второйстранички==================================
-    #===========================================================================
-
-
-i = 10
-while sheet[NAME + str(i)].value:
-    kind = {}
-    flp = sheet[NAME + str(i)].value.split()
-    if len(flp) == 2:
-         kind["first_name"], kind["last_name"] = flp
-         kind["patronymic"] = ""
-    else:
-        kind["first_name"], kind["last_name"], kind["patronymic"] = flp
-    kind["date"] = sheet[DATE + str(i)].value
-    kind["parent"] = re.split("\n|,|  ", sheet[RODITEL + str(i)].value)
-    
-    ministerstvo = sheet[MINISTERSTVO + str(i)].value
-    if len(ministerstvo) > 50:
-        sp = ministerstvo.split(' ')
-        kind["ministerstvo"] = [" ".join(sp[:(len(sp)//2)+2])," ".join(sp[(len(sp)//2)+2:])]
-    else:
-        kind["ministerstvo"] = [ministerstvo]
-
-    address = sheet[ADDRESS + str(i)].value
-    if address :
-        if len(address) > 40:
-            sp = address.split(',')
-            kind["address"] = [",".join(sp[:(len(sp)//2)]),",".join(sp[(len(sp)//2):])]
-        else:
-            kind["address"] = [address]
-    else:
-        kind["address"] = [""]
-    kind["ages"] = kind["date"].strftime("%d.%m.%Y") + " (" + getAges(kind["date"]) + " лет)"
-    kinds.append(kind)
-    i += 1
-
-def main():
-    for kind in kinds:
-        printKind(kind)
-    pdf.output(file_to)
-
-
-
-if __name__ == "__main__":
-    main()
+#messagebox.showinfo("KEK", "KEK!")
+root.mainloop()
