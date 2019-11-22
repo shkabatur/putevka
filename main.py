@@ -11,6 +11,8 @@ import sys
 with open("position.json") as json_file:
     position = json.load(json_file)
 
+log = open("log.txt", "w")
+sys.stderr = open("errors.txt", "w")
 
 pdf = FPDF(orientation="L", unit="mm", format="A4")
 pdf.add_font("KEK", '', 'times-new-roman.ttf', uni=True)
@@ -20,13 +22,13 @@ ADDRESS = "K"
 NAME = "C"
 RODITEL = "M"
 MINISTERSTVO = "Q"
-
+print(sys.argv[1:], file=log)
 file_from, file_to, SMENA, date_smena, s, po = sys.argv[1:]
 file_to = file_to + datetime.datetime.now().strftime("%H.%M.%S") + ".pdf"
 
-print(file_to)
 
 ss = s.split('-')
+print("ss:",ss,file=log)
 if len(ss) == 4:
     s_den1,s_den2, s_mesyac, s_god = ss
     s_den = "-".join([s_den1, s_den2])
@@ -34,6 +36,7 @@ else:
     s_den, s_mesyac, s_god = ss
 
 ppo = po.split("-")
+print("ppo = ", ppo, file=log)
 if len(ppo) == 4:
     po_den1,po_den2, po_mesyac, po_god = ppo
     po_den = "-".join([po_den1, po_den2])
@@ -177,11 +180,14 @@ while sheet[NAME + str(i)].value:
         kind["ministerstvo"] = [ministerstvo]
 
     address = sheet[ADDRESS + str(i)].value
-    if len(address) > 40:
-        sp = address.split(',')
-        kind["address"] = [",".join(sp[:(len(sp)//2)]),",".join(sp[(len(sp)//2):])]
+    if address :
+        if len(address) > 40:
+            sp = address.split(',')
+            kind["address"] = [",".join(sp[:(len(sp)//2)]),",".join(sp[(len(sp)//2):])]
+        else:
+            kind["address"] = [address]
     else:
-        kind["address"] = [address]
+        kind["address"] = [""]
     kind["ages"] = kind["date"].strftime("%d.%m.%Y") + " (" + getAges(kind["date"]) + " лет)"
     kinds.append(kind)
     i += 1
