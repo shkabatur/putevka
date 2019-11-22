@@ -22,12 +22,24 @@ RODITEL = "M"
 MINISTERSTVO = "Q"
 
 file_from, file_to, SMENA, date_smena, s, po = sys.argv[1:]
-file_to = file_to + "putevki.pdf"
+file_to = file_to + datetime.datetime.now().strftime("%H.%M.%S") + ".pdf"
 
 print(file_to)
 
-s_den, s_mesyac, s_god = s.split('-')
-po_den, po_mesyac, po_god = po.split('-')
+ss = s.split('-')
+if len(ss) == 4:
+    s_den1,s_den2, s_mesyac, s_god = ss
+    s_den = "-".join([s_den1, s_den2])
+else:
+    s_den, s_mesyac, s_god = ss
+
+ppo = po.split("-")
+if len(ppo) == 4:
+    po_den1,po_den2, po_mesyac, po_god = ppo
+    po_den = "-".join([po_den1, po_den2])
+else:
+    po_den, po_mesyac, po_god = ppo
+
 y,m,d = date_smena.split('.')
 date_smena = datetime.datetime(int(y), int(m), int(d))
 
@@ -54,7 +66,7 @@ def printInCells(s, x, y):
 
 def printKind(kind):
     pdf.add_page()
-    pdf.set_font("KEK", size=14)
+    pdf.set_font("KEK", size=12)
     #==========================================================================
     #========Первая страничка==================================================
     #nomer smeny
