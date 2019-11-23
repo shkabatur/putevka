@@ -77,5 +77,4 @@ input_file_l = Label(root,text="Файл не выбран!")
 input_file_l.place(x=150,y=120)
 Button(root,text="Создать!", command=generate).place(x=110,y=180)
 
-#messagebox.showinfo("KEK", "KEK!")
 root.mainloop()

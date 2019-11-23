@@ -41,13 +41,13 @@ def printInCells(s, x, y):
         x += INTERVAL
 
 
-def printKind(kind,SMENA,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god):
+def printKind(kind,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god):
     pdf.add_page()
     pdf.set_font("KEK", size=12)
     #==========================================================================
     #========Первая страничка==================================================
     #nomer smeny
-    print_xy(position["1s"]["nomer_smeny"]["x"], position["1s"]["nomer_smeny"]["y"], SMENA)
+    print_xy(position["1s"]["nomer_smeny"]["x"], position["1s"]["nomer_smeny"]["y"], smena_no)
 
     #S DATE
     print_xy(position["1s"]["s_den"]["x"], position["1s"]["s_den"]["y"], s_den)
@@ -96,7 +96,7 @@ def printKind(kind,SMENA,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god):
     #==========================================================================
     #========Вторая страничка==================================================
     #nomer smeny
-    print_xy(position["2s"]["nomer_smeny"]["x"], position["2s"]["nomer_smeny"]["y"], SMENA)
+    print_xy(position["2s"]["nomer_smeny"]["x"], position["2s"]["nomer_smeny"]["y"], smena_no)
 
     #S DATE
     print_xy(position["2s"]["s_den"]["x"], position["2s"]["s_den"]["y"], s_den)
@@ -138,7 +138,7 @@ def printKind(kind,SMENA,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god):
     #===================Конец второйстранички==================================
     #===========================================================================
 
-def processKinds(SMENA,date_smena,file_from, file_to,s,po):
+def processKinds(smena_no,date_smena,file_from, file_to,s,po):
 
     
     s_den, s_mesyac, s_god = s
@@ -181,6 +181,6 @@ def processKinds(SMENA,date_smena,file_from, file_to,s,po):
         i += 1
 
     for kind in kinds:
-        printKind(kind,SMENA,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god)
+        printKind(kind,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god)
     pdf.output(file_to)
     messagebox.showinfo("Ура!","Путёвки созданы!")
