@@ -11,7 +11,8 @@ def selectFile():
     input_file = filedialog.askopenfilename(
         title = "Выберитей файл путёвок!",
         filetypes = (("exel files","*.xlsx"), ("all files","*.*")))
-    input_file_l['text'] = re.split(r'\\|/', input_file)[-1]
+    if len(input_file) > 1:
+        input_file_l['text'] = re.split(r'\\|/', input_file)[-1]
 
 def generate():
     print(input_file)
