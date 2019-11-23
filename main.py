@@ -9,7 +9,7 @@ input_file = ""
 def selectFile():
     global input_file
     input_file = filedialog.askopenfilename(
-        initialdir = "/home/den/src/putevka/", title = "Выберитей файл путёвок!",
+        title = "Выберитей файл путёвок!",
         filetypes = (("exel files","*.xlsx"), ("all files","*.*")))
     input_file_l['text'] = re.split(r'\\|/', input_file)[-1]
 
