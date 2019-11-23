@@ -4,13 +4,17 @@ from helpers import processKinds
 import re
 import os
 
+input_file = ""
+
 def selectFile():
-    filename = filedialog.askopenfilename(
+    global input_file
+    input_file = filedialog.askopenfilename(
         initialdir = "/home/den/src/putevka/", title = "Выберитей файл путёвок!",
         filetypes = (("exel files","*.xlsx"), ("all files","*.*")))
-    input_file_l['text'] = re.split(r'\\|/', filename)[-1]
+    input_file_l['text'] = re.split(r'\\|/', input_file)[-1]
 
 def generate():
+    print(input_file)
     #smena
     smena_no = smena_no_e.get()
     if len(smena_no) < 1:
@@ -28,7 +32,10 @@ def generate():
     except:
         messagebox.showwarning("Заполните дату!","Неправильно заполнена дата!")
     
-    input_file = input_file_l['text']
+    if len(input_file) < 1:
+        messagebox.showwarning("Файл не выбран","Выберите файл!")
+        return
+
     output_file = os.path.join(filedialog.askdirectory(),  input_file_l['text'].split('.')[0] + ".pdf")
 
     print(output_file)
