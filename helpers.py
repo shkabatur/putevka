@@ -8,6 +8,10 @@ import json
 import re
 import sys
 from tkinter import messagebox
+import logging
+
+logging.basicConfig(level=logging.DEBUG,filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+logging.info("Start logging.....")
 
 
 sys.stderr = open("errors.txt", "w")
@@ -140,7 +144,8 @@ def printKind(kind,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god):
 
 def processKinds(smena_no,date_smena,file_from, file_to,s,po):
 
-    
+    logging.info(file_from)
+    logging.info(file_to)    
     s_den, s_mesyac, s_god = s
     po_den, po_mesyac, po_god = po
 
