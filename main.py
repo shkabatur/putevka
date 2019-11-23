@@ -1,7 +1,8 @@
 from tkinter import messagebox, filedialog, Entry, Tk, StringVar, Label, END, Button
-import re
 from datetime import datetime
 from helpers import processKinds
+import re
+import os
 
 def selectFile():
     filename = filedialog.askopenfilename(
@@ -28,7 +29,7 @@ def generate():
         messagebox.showwarning("Заполните дату!","Неправильно заполнена дата!")
     
     input_file = input_file_l['text']
-    output_file = filedialog.askdirectory() + input_file_l['text'].split('.')[0] + ".pdf"
+    output_file = os.path.join(filedialog.askdirectory(),  input_file_l['text'].split('.')[0] + ".pdf")
 
     print(output_file)
     s_den = s_den_e.get()
