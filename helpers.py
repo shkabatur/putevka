@@ -24,6 +24,7 @@ ADDRESS = "K"
 NAME = "C"
 RODITEL = "M"
 MINISTERSTVO = "Q"
+SUMMA = "P"
 
 
 with open("position.json") as json_file:
@@ -89,6 +90,8 @@ def printKind(kind,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god):
     if len(kind["ministerstvo"]) > 1:
         print_xy(position["1s"]["ministerstvo2"]["x"],position["1s"]["ministerstvo2"]["y"], kind["ministerstvo"][1])
     
+    if kind["summa"]:
+        print_xy(position["1s"]["summa"]["x"],position["1s"]["summa"]["y"], kind["summa"])
     #LINE
     #x = position["1s"]["line"]["x"]
     #y = position["1s"]["line"]["y"]
@@ -133,6 +136,8 @@ def printKind(kind,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god):
     if len(kind["address"]) > 1:
         print_xy(position["2s"]["Adres_roditelya2"]["x"],position["2s"]["Adres_roditelya2"]["y"], kind["address"][1])
 
+    if kind["summa"]:
+        print_xy(position["2s"]["summa"]["x"],position["1s"]["summa"]["y"], kind["summa"])
 
     #LINE
     #x = position["2s"]["line"]["x"]
@@ -182,6 +187,11 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
         else:
             kind["address"] = [""]
         kind["ages"] = kind["date"].strftime("%d.%m.%Y") + " (" + getAges(kind["date"],date_smena) + " лет)"
+        summa = sheet[SUMMA + str(i)].value
+        if summa:
+            kind["summa"] = summa
+        else:
+            kind["summa"] = ""
         kinds.append(kind)
         i += 1
 
