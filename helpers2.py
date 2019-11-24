@@ -67,10 +67,6 @@ def printKind(kind,pdf, pos):
         elif name != "z":
             print_xy(x1,y1,kind[name])
             print_xy(x2,y2,kind[name])
-        
-
-
-    
 
 def processKinds(smena_no,date_smena,file_from, file_to,s,po):
 
@@ -82,9 +78,7 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
     SUMMA = "P"
 
     with open("pos.json") as json_file:
-        position = json.load(json_file)
-
-    position = position["pos"]
+        position = json.load(json_file)["pos"]
 
     pdf = FPDF(orientation="L", unit="mm", format="A4")
     pdf.add_font("KEK", '', 'times-new-roman.ttf', uni=True)
