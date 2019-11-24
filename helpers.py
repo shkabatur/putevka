@@ -17,12 +17,11 @@ logging.info("Start logging.....")
 sys.stderr = open("errors.txt", "w")
     
 
-
 def getAges(a,b):
     return str(int((b - a).days / 365))    
 
 
-def printKind(kind,pdf, position,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god):
+def printKind(kind,pdf, position,smena_no,s_d,s_m,s_g,po_d,po_m,po_g):
     def print_xy(x,y,text):
         pdf.set_xy(x,y)
         pdf.cell(0,0,text)
@@ -42,22 +41,22 @@ def printKind(kind,pdf, position,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,
     print_xy(position["1s"]["nomer_smeny"]["x"], position["1s"]["nomer_smeny"]["y"], smena_no)
 
     #S DATE
-    print_xy(position["1s"]["s_den"]["x"], position["1s"]["s_den"]["y"], s_den)
-    print_xy(position["1s"]["s_mesyac"]["x"], position["1s"]["s_mesyac"]["y"], s_mesyac)
-    print_xy(position["1s"]["s_god"]["x"], position["1s"]["s_god"]["y"], s_god)
+    print_xy(position["1s"]["s_d"]["x"], position["1s"]["s_d"]["y"], s_d)
+    print_xy(position["1s"]["s_m"]["x"], position["1s"]["s_m"]["y"], s_m)
+    print_xy(position["1s"]["s_g"]["x"], position["1s"]["s_g"]["y"], s_g)
 
     #PO DATE
-    print_xy(position["1s"]["po_den"]["x"], position["1s"]["po_den"]["y"], po_den)
-    print_xy(position["1s"]["po_mesyac"]["x"], position["1s"]["po_mesyac"]["y"], po_mesyac)
-    print_xy(position["1s"]["po_god"]["x"], position["1s"]["po_god"]["y"], po_god)
+    print_xy(position["1s"]["po_d"]["x"], position["1s"]["po_d"]["y"], po_d)
+    print_xy(position["1s"]["po_m"]["x"], position["1s"]["po_m"]["y"], po_m)
+    print_xy(position["1s"]["po_g"]["x"], position["1s"]["po_g"]["y"], po_g)
 
     #VOZRAST
     print_xy(position["1s"]["vozrast"]["x"], position["1s"]["vozrast"]["y"], kind["ages"])
 
     #FAMILIYA
-    printInCells(kind["first_name"], position["1s"]["Familiya"]["x"], position["1s"]["Familiya"]["y"])
+    printInCells(kind["last_name"], position["1s"]["Familiya"]["x"], position["1s"]["Familiya"]["y"])
     #IMYA
-    printInCells(kind["last_name"], position["1s"]["Imya"]["x"], position["1s"]["Imya"]["y"])
+    printInCells(kind["first_name"], position["1s"]["Imya"]["x"], position["1s"]["Imya"]["y"])
     #OTCHESTVO
     printInCells(kind["patronymic"], position["1s"]["Otchestvo"]["x"], position["1s"]["Otchestvo"]["y"])
 
@@ -104,22 +103,22 @@ def printKind(kind,pdf, position,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,
     print_xy(position["2s"]["nomer_smeny"]["x"], position["2s"]["nomer_smeny"]["y"], smena_no)
 
     #S DATE
-    print_xy(position["2s"]["s_den"]["x"], position["2s"]["s_den"]["y"], s_den)
-    print_xy(position["2s"]["s_mesyac"]["x"], position["2s"]["s_mesyac"]["y"], s_mesyac)
-    print_xy(position["2s"]["s_god"]["x"], position["2s"]["s_god"]["y"], s_god)
+    print_xy(position["2s"]["s_d"]["x"], position["2s"]["s_d"]["y"], s_d)
+    print_xy(position["2s"]["s_m"]["x"], position["2s"]["s_m"]["y"], s_m)
+    print_xy(position["2s"]["s_g"]["x"], position["2s"]["s_g"]["y"], s_g)
 
     #PO DATE
-    print_xy(position["2s"]["po_den"]["x"], position["2s"]["po_den"]["y"], po_den)
-    print_xy(position["2s"]["po_mesyac"]["x"], position["2s"]["po_mesyac"]["y"], po_mesyac)
-    print_xy(position["2s"]["po_god"]["x"], position["2s"]["po_god"]["y"], po_god)
+    print_xy(position["2s"]["po_d"]["x"], position["2s"]["po_d"]["y"], po_d)
+    print_xy(position["2s"]["po_m"]["x"], position["2s"]["po_m"]["y"], po_m)
+    print_xy(position["2s"]["po_g"]["x"], position["2s"]["po_g"]["y"], po_g)
 
     #VOZRAST
     print_xy(position["2s"]["vozrast"]["x"], position["2s"]["vozrast"]["y"], kind["ages"])
 
     #FAMILIYA
-    printInCells(kind["first_name"], position["2s"]["Familiya"]["x"], position["2s"]["Familiya"]["y"])
+    printInCells(kind["last_name"], position["2s"]["Familiya"]["x"], position["2s"]["Familiya"]["y"])
     #IMYA
-    printInCells(kind["last_name"], position["2s"]["Imya"]["x"], position["2s"]["Imya"]["y"])
+    printInCells(kind["first_name"], position["2s"]["Imya"]["x"], position["2s"]["Imya"]["y"])
     #OTCHESTVO
     printInCells(kind["patronymic"], position["2s"]["Otchestvo"]["x"], position["2s"]["Otchestvo"]["y"])
 
@@ -172,8 +171,8 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
 
     logging.info(file_from)
     logging.info(file_to)    
-    s_den, s_mesyac, s_god = s
-    po_den, po_mesyac, po_god = po
+    s_d, s_m, s_g = s
+    po_d, po_m, po_g = po
 
     workbook = load_workbook(filename=file_from)
     sheet = workbook.active
@@ -184,10 +183,10 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
         kind = {}
         flp = sheet[NAME + str(i)].value.split()
         if len(flp) == 2:
-            kind["first_name"], kind["last_name"] = flp
+            kind["last_name"], kind["first_name"] = flp
             kind["patronymic"] = ""
         else:
-            kind["first_name"], kind["last_name"], kind["patronymic"] = flp
+            kind["last_name"], kind["first_name"], kind["patronymic"] = flp
         kind["date"] = sheet[DATE + str(i)].value
         kind["parent"] = re.split("\n|,|  ", sheet[RODITEL + str(i)].value)
         
@@ -217,7 +216,7 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
         i += 1
 
     for kind in kinds:
-        printKind(kind,pdf,position,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god)
+        printKind(kind,pdf,position,smena_no,s_d,s_m,s_g,po_d,po_m,po_g)
     pdf.output(file_to)
     pdf.close()
     messagebox.showinfo("Ура!","Путёвки созданы!")
