@@ -80,6 +80,9 @@ def printKind(kind,pdf, position,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,
     #summa or zline
     if kind["summa"]:
         print_xy(position["1s"]["summa"]["x"],position["1s"]["summa"]["y"], kind["summa"])
+        pdf.set_line_width(1.5)
+        x,y = position["1s"]["line"]["x"],position["1s"]["line"]["y"]
+        pdf.line(x-60,y,x,y)
     else:
         pdf.set_font("KEK", size=28)
         print_xy(position["1s"]["z"]["x"],position["1s"]["z"]["y"], "Ƶ")
@@ -87,6 +90,8 @@ def printKind(kind,pdf, position,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,
         x,y = position["1s"]["line"]["x"],position["1s"]["line"]["y"]
         pdf.line(x,y,x+40,y)
     pdf.set_font("KEK", size=12)
+    #===================Конец первой странички==================================
+    #===========================================================================
     
     #==========================================================================
     #========Вторая страничка==================================================
@@ -125,17 +130,19 @@ def printKind(kind,pdf, position,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,
         print_xy(position["2s"]["Adres_roditelya2"]["x"],position["2s"]["Adres_roditelya2"]["y"], kind["address"][1])
 
     #summa or zline
-    print(kind["summa"])
     if kind["summa"]:
-        print_xy(position["2s"]["summa"]["x"],position["1s"]["summa"]["y"], kind["summa"])
+        print_xy(position["2s"]["summa"]["x"],position["2s"]["summa"]["y"], kind["summa"])
+        pdf.set_line_width(1.5)
+        x,y = position["2s"]["line"]["x"],position["2s"]["line"]["y"]
+        pdf.line(x-60,y,x,y)
     else:
         pdf.set_font("KEK", size=28)
-        print_xy(position["2s"]["z"]["x"],position["1s"]["z"]["y"], "Ƶ")
+        print_xy(position["2s"]["z"]["x"],position["2s"]["z"]["y"], "Ƶ")
         pdf.set_line_width(1.5)
-        x,y = position["2s"]["line"]["x"],position["1s"]["line"]["y"]
+        x,y = position["2s"]["line"]["x"],position["2s"]["line"]["y"]
         pdf.line(x,y,x+40,y)
 
-    #===================Конец второйстранички==================================
+    #===================Конец второй странички==================================
     #===========================================================================
 
 def processKinds(smena_no,date_smena,file_from, file_to,s,po):
@@ -146,7 +153,7 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
     RODITEL = "M"
     MINISTERSTVO = "Q"
     SUMMA = "P"
-    
+
     with open("position.json") as json_file:
         position = json.load(json_file)
 
