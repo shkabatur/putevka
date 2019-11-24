@@ -17,7 +17,7 @@ logging.info("Start logging.....")
 sys.stderr = open("errors.txt", "w")
     
 
-def getAges(a,b):
+def get_age(a,b):
     return str(int((b - a).days / 365))    
 
 
@@ -38,7 +38,7 @@ def printKind(kind,pdf, position,smena_no,s_d,s_m,s_g,po_d,po_m,po_g):
     #==========================================================================
     #========Первая страничка==================================================
     #nomer smeny
-    print_xy(position["1s"]["nomer_smeny"]["x"], position["1s"]["nomer_smeny"]["y"], smena_no)
+    print_xy(position["1s"]["smena_no"]["x"], position["1s"]["smena_no"]["y"], smena_no)
 
     #S DATE
     print_xy(position["1s"]["s_d"]["x"], position["1s"]["s_d"]["y"], s_d)
@@ -50,26 +50,26 @@ def printKind(kind,pdf, position,smena_no,s_d,s_m,s_g,po_d,po_m,po_g):
     print_xy(position["1s"]["po_m"]["x"], position["1s"]["po_m"]["y"], po_m)
     print_xy(position["1s"]["po_g"]["x"], position["1s"]["po_g"]["y"], po_g)
 
-    #VOZRAST
-    print_xy(position["1s"]["vozrast"]["x"], position["1s"]["vozrast"]["y"], kind["ages"])
+    #age
+    print_xy(position["1s"]["age"]["x"], position["1s"]["age"]["y"], kind["age"])
 
-    #FAMILIYA
-    printInCells(kind["last_name"], position["1s"]["Familiya"]["x"], position["1s"]["Familiya"]["y"])
-    #IMYA
-    printInCells(kind["first_name"], position["1s"]["Imya"]["x"], position["1s"]["Imya"]["y"])
-    #OTCHESTVO
-    printInCells(kind["patronymic"], position["1s"]["Otchestvo"]["x"], position["1s"]["Otchestvo"]["y"])
+    #last_name
+    printInCells(kind["last_name"], position["1s"]["last_name"]["x"], position["1s"]["last_name"]["y"])
+    #first_name
+    printInCells(kind["first_name"], position["1s"]["first_name"]["x"], position["1s"]["first_name"]["y"])
+    #patronymic
+    printInCells(kind["patronymic"], position["1s"]["patronymic"]["x"], position["1s"]["patronymic"]["y"])
 
-    #FIO_RODITELYA
-    print_xy(position["1s"]["FIO_roditelya"]["x"],position["1s"]["FIO_roditelya"]["y"], kind["parent"][0])
+    #parent
+    print_xy(position["1s"]["parent"]["x"],position["1s"]["parent"]["y"], kind["parent"][0])
     if len(kind["parent"]) > 1:
-        print_xy(position["1s"]["FIO_roditelya"]["x"],position["1s"]["FIO_roditelya"]["y"] + 7, kind["parent"][1])
+        print_xy(position["1s"]["parent"]["x"],position["1s"]["parent"]["y"] + 7, kind["parent"][1])
 
 
-    #Adres_roditelya
-    print_xy(position["1s"]["Adres_roditelya"]["x"],position["1s"]["Adres_roditelya"]["y"], kind["address"][0])
+    #parent_addr
+    print_xy(position["1s"]["parent_addr"]["x"],position["1s"]["parent_addr"]["y"], kind["address"][0])
     if len(kind["address"]) > 1:
-        print_xy(position["1s"]["Adres_roditelya2"]["x"],position["1s"]["Adres_roditelya2"]["y"], kind["address"][1])
+        print_xy(position["1s"]["parent_addr2"]["x"],position["1s"]["parent_addr2"]["y"], kind["address"][1])
 
     #Ministerstvo
     print_xy(position["1s"]["ministerstvo"]["x"],position["1s"]["ministerstvo"]["y"], kind["ministerstvo"][0])
@@ -100,7 +100,7 @@ def printKind(kind,pdf, position,smena_no,s_d,s_m,s_g,po_d,po_m,po_g):
     #==========================================================================
     #========Вторая страничка==================================================
     #nomer smeny
-    print_xy(position["2s"]["nomer_smeny"]["x"], position["2s"]["nomer_smeny"]["y"], smena_no)
+    print_xy(position["2s"]["smena_no"]["x"], position["2s"]["smena_no"]["y"], smena_no)
 
     #S DATE
     print_xy(position["2s"]["s_d"]["x"], position["2s"]["s_d"]["y"], s_d)
@@ -112,26 +112,26 @@ def printKind(kind,pdf, position,smena_no,s_d,s_m,s_g,po_d,po_m,po_g):
     print_xy(position["2s"]["po_m"]["x"], position["2s"]["po_m"]["y"], po_m)
     print_xy(position["2s"]["po_g"]["x"], position["2s"]["po_g"]["y"], po_g)
 
-    #VOZRAST
-    print_xy(position["2s"]["vozrast"]["x"], position["2s"]["vozrast"]["y"], kind["ages"])
+    #age
+    print_xy(position["2s"]["age"]["x"], position["2s"]["age"]["y"], kind["age"])
 
-    #FAMILIYA
-    printInCells(kind["last_name"], position["2s"]["Familiya"]["x"], position["2s"]["Familiya"]["y"])
-    #IMYA
-    printInCells(kind["first_name"], position["2s"]["Imya"]["x"], position["2s"]["Imya"]["y"])
-    #OTCHESTVO
-    printInCells(kind["patronymic"], position["2s"]["Otchestvo"]["x"], position["2s"]["Otchestvo"]["y"])
+    #last_name
+    printInCells(kind["last_name"], position["2s"]["last_name"]["x"], position["2s"]["last_name"]["y"])
+    #first_name
+    printInCells(kind["first_name"], position["2s"]["first_name"]["x"], position["2s"]["first_name"]["y"])
+    #patronymic
+    printInCells(kind["patronymic"], position["2s"]["patronymic"]["x"], position["2s"]["patronymic"]["y"])
 
-    #FIO_RODITELYA
-    print_xy(position["2s"]["FIO_roditelya"]["x"],position["2s"]["FIO_roditelya"]["y"], kind["parent"][0])
+    #parent
+    print_xy(position["2s"]["parent"]["x"],position["2s"]["parent"]["y"], kind["parent"][0])
     if len(kind["parent"]) > 1:
-        print_xy(position["2s"]["FIO_roditelya"]["x"],position["2s"]["FIO_roditelya"]["y"] + 7, kind["parent"][1])
+        print_xy(position["2s"]["parent"]["x"],position["2s"]["parent"]["y"] + 7, kind["parent"][1])
 
 
-    #Adres_roditelya
-    print_xy(position["2s"]["Adres_roditelya"]["x"],position["2s"]["Adres_roditelya"]["y"], kind["address"][0])
+    #parent_addr
+    print_xy(position["2s"]["parent_addr"]["x"],position["2s"]["parent_addr"]["y"], kind["address"][0])
     if len(kind["address"]) > 1:
-        print_xy(position["2s"]["Adres_roditelya2"]["x"],position["2s"]["Adres_roditelya2"]["y"], kind["address"][1])
+        print_xy(position["2s"]["parent_addr2"]["x"],position["2s"]["parent_addr2"]["y"], kind["address"][1])
 
     #summa or zline
     if kind["summa"]:
@@ -206,7 +206,7 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
                 kind["address"] = [address]
         else:
             kind["address"] = [""]
-        kind["ages"] = kind["date"].strftime("%d.%m.%Y") + " (" + getAges(kind["date"],date_smena) + " лет)"
+        kind["age"] = kind["date"].strftime("%d.%m.%Y") + " (" + get_age(kind["date"],date_smena) + " лет)"
         summa = sheet[SUMMA + str(i)].value
         if summa:
             kind["summa"] = summa
