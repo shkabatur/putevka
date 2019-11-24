@@ -1,9 +1,0 @@
-Exception in Tkinter callback
-Traceback (most recent call last):
-  File "/usr/lib/python3.7/tkinter/__init__.py", line 1705, in __call__
-    return self.func(*args)
-  File "/home/den/src/python/putevka/main.py", line 14, in selectFile
-    input_file_l['text'] = re.split(r'\\|/', input_file)[-1]
-  File "/usr/lib/python3.7/re.py", line 213, in split
-    return _compile(pattern, flags).split(string, maxsplit)
-TypeError: expected string or bytes-like object
