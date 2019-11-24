@@ -1,6 +1,6 @@
 from tkinter import messagebox, filedialog, Entry, Tk, StringVar, Label, END, Button
 from datetime import datetime
-from helpers import processKinds
+from helpers2 import processKinds
 import re
 import os
 
