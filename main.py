@@ -13,6 +13,7 @@ def selectFile():
         filetypes = (("exel files","*.xlsx"), ("all files","*.*")))
     if len(input_file) > 1:
         input_file_l['text'] = re.split(r'\\|/', input_file)[-1]
+    print(input_file)
 
 def generate():
     print(input_file)

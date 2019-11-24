@@ -16,37 +16,24 @@ logging.info("Start logging.....")
 
 sys.stderr = open("errors.txt", "w")
     
-pdf = FPDF(orientation="L", unit="mm", format="A4")
-pdf.add_font("KEK", '', 'times-new-roman.ttf', uni=True)
-    
-DATE = "D"
-ADDRESS = "K"
-NAME = "C"
-RODITEL = "M"
-MINISTERSTVO = "Q"
-SUMMA = "P"
-
-
-with open("position.json") as json_file:
-        position = json.load(json_file)
 
 
 def getAges(a,b):
     return str(int((b - a).days / 365))    
 
 
-def print_xy(x,y,text):
-    pdf.set_xy(x,y)
-    pdf.cell(0,0,text)
-
-def printInCells(s, x, y):
-    INTERVAL = 6.2
-    for c in s :
-        print_xy(x,y,c)
-        x += INTERVAL
+def printKind(kind,pdf, position,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god):
+    def print_xy(x,y,text):
+        pdf.set_xy(x,y)
+        pdf.cell(0,0,text)
 
 
-def printKind(kind,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god):
+    def printInCells(s, x, y):
+        INTERVAL = 6.2
+        for c in s :
+            print_xy(x,y,c)
+            x += INTERVAL
+
     pdf.add_page()
     pdf.set_font("KEK", size=12)
     #==========================================================================
@@ -90,16 +77,17 @@ def printKind(kind,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god):
     if len(kind["ministerstvo"]) > 1:
         print_xy(position["1s"]["ministerstvo2"]["x"],position["1s"]["ministerstvo2"]["y"], kind["ministerstvo"][1])
     
+    #summa or zline
     if kind["summa"]:
         print_xy(position["1s"]["summa"]["x"],position["1s"]["summa"]["y"], kind["summa"])
-    #LINE
-    #x = position["1s"]["line"]["x"]
-    #y = position["1s"]["line"]["y"]
-    #pdf.set_line_width(2)
-    #pdf.line(x,y,x+35,y)
-    #===================Конец первой странички==================================
-    #===========================================================================
-
+    else:
+        pdf.set_font("KEK", size=28)
+        print_xy(position["1s"]["z"]["x"],position["1s"]["z"]["y"], "Ƶ")
+        pdf.set_line_width(1.5)
+        x,y = position["1s"]["line"]["x"],position["1s"]["line"]["y"]
+        pdf.line(x,y,x+40,y)
+    pdf.set_font("KEK", size=12)
+    
     #==========================================================================
     #========Вторая страничка==================================================
     #nomer smeny
@@ -136,18 +124,34 @@ def printKind(kind,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god):
     if len(kind["address"]) > 1:
         print_xy(position["2s"]["Adres_roditelya2"]["x"],position["2s"]["Adres_roditelya2"]["y"], kind["address"][1])
 
+    #summa or zline
+    print(kind["summa"])
     if kind["summa"]:
         print_xy(position["2s"]["summa"]["x"],position["1s"]["summa"]["y"], kind["summa"])
+    else:
+        pdf.set_font("KEK", size=28)
+        print_xy(position["2s"]["z"]["x"],position["1s"]["z"]["y"], "Ƶ")
+        pdf.set_line_width(1.5)
+        x,y = position["2s"]["line"]["x"],position["1s"]["line"]["y"]
+        pdf.line(x,y,x+40,y)
 
-    #LINE
-    #x = position["2s"]["line"]["x"]
-    #y = position["2s"]["line"]["y"]
-    #pdf.set_line_width(2)
-    #pdf.line(x,y,x+35,y)
     #===================Конец второйстранички==================================
     #===========================================================================
 
 def processKinds(smena_no,date_smena,file_from, file_to,s,po):
+
+    DATE = "D"
+    ADDRESS = "K"
+    NAME = "C"
+    RODITEL = "M"
+    MINISTERSTVO = "Q"
+    SUMMA = "P"
+    
+    with open("position.json") as json_file:
+        position = json.load(json_file)
+
+    pdf = FPDF(orientation="L", unit="mm", format="A4")
+    pdf.add_font("KEK", '', 'times-new-roman.ttf', uni=True)
 
     logging.info(file_from)
     logging.info(file_to)    
@@ -196,6 +200,7 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
         i += 1
 
     for kind in kinds:
-        printKind(kind,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god)
+        printKind(kind,pdf,position,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,po_god)
     pdf.output(file_to)
+    pdf.close()
     messagebox.showinfo("Ура!","Путёвки созданы!")
