@@ -80,15 +80,20 @@ def printKind(kind,pdf, position,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,
     #summa or zline
     if kind["summa"]:
         print_xy(position["1s"]["summa"]["x"],position["1s"]["summa"]["y"], kind["summa"])
-        pdf.set_line_width(1.5)
-        x,y = position["1s"]["line"]["x"],position["1s"]["line"]["y"]
-        pdf.line(x-60,y,x,y)
+        x,y = position["1s"]["line2"]["x"],position["1s"]["line2"]["y"]
+        width = position["1s"]["line2"]["width"]
+        length = position["1s"]["line2"]["length"]
+        pdf.set_line_width(width)
+        pdf.line(x,y,x+length,y)
     else:
-        pdf.set_font("KEK", size=28)
+        z_size = position["1s"]["z"]["size"]
+        pdf.set_font("KEK", size= z_size)
         print_xy(position["1s"]["z"]["x"],position["1s"]["z"]["y"], "Ƶ")
-        pdf.set_line_width(1.5)
         x,y = position["1s"]["line"]["x"],position["1s"]["line"]["y"]
-        pdf.line(x,y,x+40,y)
+        width = position["1s"]["line"]["width"]
+        length = position["1s"]["line"]["length"]
+        pdf.set_line_width(width)
+        pdf.line(x,y,x+length,y)
     pdf.set_font("KEK", size=12)
     #===================Конец первой странички==================================
     #===========================================================================
@@ -132,15 +137,20 @@ def printKind(kind,pdf, position,smena_no,s_den,s_mesyac,s_god,po_den,po_mesyac,
     #summa or zline
     if kind["summa"]:
         print_xy(position["2s"]["summa"]["x"],position["2s"]["summa"]["y"], kind["summa"])
-        pdf.set_line_width(1.5)
-        x,y = position["2s"]["line"]["x"],position["2s"]["line"]["y"]
-        pdf.line(x-60,y,x,y)
+        x,y = position["2s"]["line2"]["x"],position["2s"]["line2"]["y"]
+        width = position["2s"]["line2"]["width"]
+        length = position["2s"]["line2"]["length"]
+        pdf.set_line_width(width)
+        pdf.line(x,y,x+length,y)
     else:
-        pdf.set_font("KEK", size=28)
+        z_size = position["2s"]["z"]["size"]
+        pdf.set_font("KEK", size= z_size)
         print_xy(position["2s"]["z"]["x"],position["2s"]["z"]["y"], "Ƶ")
-        pdf.set_line_width(1.5)
         x,y = position["2s"]["line"]["x"],position["2s"]["line"]["y"]
-        pdf.line(x,y,x+40,y)
+        width = position["2s"]["line"]["width"]
+        length = position["2s"]["line"]["length"]
+        pdf.set_line_width(width)
+        pdf.line(x,y,x+length,y)
 
     #===================Конец второй странички==================================
     #===========================================================================
