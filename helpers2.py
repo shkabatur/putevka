@@ -128,7 +128,7 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
 
         ministerstvo = sheet[MINISTERSTVO + str(i)].value
         if ministerstvo:
-            if len(ministerstvo) > 60:
+            if len(ministerstvo) > 66:
                 sp = ministerstvo.split(' ')
                 kind["ministerstvo1"], kind["ministerstvo2"] = [" ".join(sp[:(len(sp)//2)])," ".join(sp[(len(sp)//2):])]
             else:
