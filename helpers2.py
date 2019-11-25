@@ -109,21 +109,26 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
         kind["date"] = sheet[DATE + str(i)].value
 
         #new 
-        parents = sheet[RODITEL + str(i)].value
-        if parents:
-            parents = re.split("\n|,|  ", sheet[RODITEL + str(i)].value)
-            if len(parents) > 1:
-                kind["parent1"], kind["parent2"] = parents
+        try:
+            parents = sheet[RODITEL + str(i)].value
+            if parents:
+                parents = [v for v in re.split("\n|,|  ", sheet[RODITEL + str(i)].value) if v]
+                if len(parents) > 1:
+                    kind["parent1"], kind["parent2"] = parents
+                else:
+                    kind["parent1"] = parents[0]
+                    kind["parent2"] = ""
             else:
-                kind["parent1"] = parents[0]
+                kind["parent1"] = ""
                 kind["parent2"] = ""
-        else:
-            kind["parent1"] = ""
-            kind["parent2"] = ""
+        except:
+            messagebox.showerror("Что-то не так с родителями:",sheet[RODITEL + str(i)].value )
+            print(re.split("\n|,|  ", sheet[RODITEL + str(i)].value))
         
+
         ministerstvo = sheet[MINISTERSTVO + str(i)].value
         if ministerstvo:
-            if len(ministerstvo) > 50:
+            if len(ministerstvo) > 60:
                 sp = ministerstvo.split(' ')
                 kind["ministerstvo1"], kind["ministerstvo2"] = [" ".join(sp[:(len(sp)//2)])," ".join(sp[(len(sp)//2):])]
             else:
