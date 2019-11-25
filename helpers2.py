@@ -123,7 +123,7 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
                 kind["parent2"] = ""
         except:
             messagebox.showerror("Что-то не так с родителями:",sheet[RODITEL + str(i)].value )
-            print(re.split("\n|,|  ", sheet[RODITEL + str(i)].value))
+            logging.error(re.split("\n|,|  ", sheet[RODITEL + str(i)].value))
         
 
         ministerstvo = sheet[MINISTERSTVO + str(i)].value
