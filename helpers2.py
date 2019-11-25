@@ -16,6 +16,17 @@ logging.info("Start logging.....")
 
 sys.stderr = open("errors.txt", "a")
     
+def splitLineToTwo(line,width,sep):
+    words = line.split(sep)
+    result_string1 = ""
+    result_string2 = ""
+    for word in words:
+        word += sep
+        if (len(result_string1) + len(word)) < width:
+            result_string1 += word
+        else:
+            result_string2 += word
+    return [result_string1, result_string2]
 
 def get_age(a,b):
     return str(int((b - a).days / 365))    
@@ -129,8 +140,7 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
         ministerstvo = sheet[MINISTERSTVO + str(i)].value
         if ministerstvo:
             if len(ministerstvo) > 66:
-                sp = ministerstvo.split(' ')
-                kind["ministerstvo1"], kind["ministerstvo2"] = [" ".join(sp[:(len(sp)//2)])," ".join(sp[(len(sp)//2):])]
+                kind["ministerstvo1"], kind["ministerstvo2"] = splitLineToTwo(ministerstvo, 66, " ")
             else:
                 kind["ministerstvo1"] = ministerstvo
                 kind["ministerstvo2"] = ""
@@ -140,9 +150,8 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
         # Адрес
         address = sheet[ADDRESS + str(i)].value
         if address :
-            if len(address) > 40:
-                sp = address.split(',')
-                kind["parent_addr1"],kind["parent_addr2"] = [",".join(sp[:(len(sp)//2)]),",".join(sp[(len(sp)//2):])]
+            if len(address) > 50:
+                kind["parent_addr1"],kind["parent_addr2"] = splitLineToTwo(address,50,",")
             else:
                 kind["parent_addr1"] = address
                 kind["parent_addr2"] = ""

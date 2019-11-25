@@ -13,13 +13,10 @@ import logging
 logging.basicConfig(level=logging.DEBUG,filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 logging.info("Start logging.....")
 
-
 sys.stderr = open("errors.txt", "w")
-    
 
 def get_age(a,b):
     return str(int((b - a).days / 365))    
-
 
 def printKind(kind,pdf, position,smena_no,s_d,s_m,s_g,po_d,po_m,po_g):
     def print_xy(x,y,text):
