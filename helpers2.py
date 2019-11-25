@@ -101,8 +101,11 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
         if len(flp) == 2:
             kind["last_name"], kind["first_name"] = flp
             kind["patronymic"] = ""
-        else:
+        elif len(flp) == 3:
             kind["last_name"], kind["first_name"], kind["patronymic"] = flp
+        else:
+            messagebox.showerror("С этой фамилией что-то не так: ",sheet[NAME + str(i)].value)
+        
         kind["date"] = sheet[DATE + str(i)].value
 
         #new 
@@ -114,15 +117,21 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
             else:
                 kind["parent1"] = parents[0]
                 kind["parent2"] = ""
+        else:
+            kind["parent1"] = ""
+            kind["parent2"] = ""
         
         ministerstvo = sheet[MINISTERSTVO + str(i)].value
-        if len(ministerstvo) > 50:
-            sp = ministerstvo.split(' ')
-            kind["ministerstvo1"], kind["ministerstvo2"] = [" ".join(sp[:(len(sp)//2)+2])," ".join(sp[(len(sp)//2)+2:])]
+        if ministerstvo:
+            if len(ministerstvo) > 50:
+                sp = ministerstvo.split(' ')
+                kind["ministerstvo1"], kind["ministerstvo2"] = [" ".join(sp[:(len(sp)//2)+2])," ".join(sp[(len(sp)//2)+2:])]
+            else:
+                kind["ministerstvo1"] = ministerstvo
+                kind["ministerstvo2"] = ""
         else:
-            kind["ministerstvo1"] = ministerstvo
+            kind["ministerstvo1"] = ""
             kind["ministerstvo2"] = ""
-        
         # Адрес
         address = sheet[ADDRESS + str(i)].value
         if address :
@@ -133,7 +142,8 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
                 kind["parent_addr1"] = address
                 kind["parent_addr2"] = ""
         else:
-            kind["address"] = [""]
+            kind["parent_addr1"] = ""
+            kind["parent_addr2"] = ""
 
         kind["age"] = kind["date"].strftime("%d.%m.%Y") + " (" + get_age(kind["date"],date_smena) + " лет)"
         summa = sheet[SUMMA + str(i)].value
