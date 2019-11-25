@@ -125,7 +125,7 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
         if ministerstvo:
             if len(ministerstvo) > 50:
                 sp = ministerstvo.split(' ')
-                kind["ministerstvo1"], kind["ministerstvo2"] = [" ".join(sp[:(len(sp)//2)+2])," ".join(sp[(len(sp)//2)+2:])]
+                kind["ministerstvo1"], kind["ministerstvo2"] = [" ".join(sp[:(len(sp)//2)])," ".join(sp[(len(sp)//2):])]
             else:
                 kind["ministerstvo1"] = ministerstvo
                 kind["ministerstvo2"] = ""
