@@ -47,6 +47,8 @@ def printKind(kind,pdf, pos):
     pdf.set_font("KEK", size=12)
 
     for pice in pos:
+        if pice.get("show") == "off":
+            continue
         name = pice.get("name")
         x1 = pice.get("x1")
         y1 = pice.get("y1")
