@@ -150,8 +150,8 @@ def processKinds(smena_no,date_smena,file_from, file_to,s,po):
         # Адрес
         address = sheet[ADDRESS + str(i)].value
         if address :
-            if len(address) > 50:
-                kind["parent_addr1"],kind["parent_addr2"] = splitLineToTwo(address,50,",")
+            if len(address) > 40:
+                kind["parent_addr1"],kind["parent_addr2"] = splitLineToTwo(address,40,",")
             else:
                 kind["parent_addr1"] = address
                 kind["parent_addr2"] = ""
